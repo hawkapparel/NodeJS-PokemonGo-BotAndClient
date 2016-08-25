@@ -16,6 +16,10 @@ This bot/client uses my own [fork](https://github.com/segura2010/Pokemon-GO-node
 
 **Due to latest API changes, we recommend you configure the example_config.json file with your real device information and rename it to config.json**
 
+**Important
+Now in config.json you can put your gmail and password for logging into pokemon go**
+
+
 This bot/client allows you to Log In with your PokemonGo account, and choose with clicks on the map where you want to go. The bot will create a route to go to the goal using Google Maps service, usign intermediate waypoints (to avoid teleportation and ban).
 
 Also, you can get near pokestops and show them on the map.
