@@ -1,0 +1,94 @@
+html, body { height: 100%; margin: 0; padding: 0; }
+#map {
+  height: 400px;
+  width: 100%;
+}
+
+.rightpanel{
+	height: 400px;
+	overflow-y: auto;
+ }
+
+.btn-login{
+	border-bottom: 3px solid gray;
+}
+
+#statusLogin{
+	margin-left: 15px;
+}
+
+#statusLogin span{
+	color: blue;
+}
+
+#stateOfWalk{
+	width:50%; 
+	height:26px;
+	background-color: #949494;
+	margin: 15px 0;
+}
+
+#stateOfWalk #text-walk span{
+	color: white;
+}
+
+#text-walk{
+	display: inline;
+}
+
+#usernameTxt{
+	width: 210px;
+}
+
+#passwordTxt{
+	width: 100px;
+}
+
+.buttons-nearby button{
+	height: 43px;
+}
+
+#list-nearby-pokemons li{
+	display: inline;
+}
+
+#list-nearby-pokemons li img{
+}
+
+#loading{
+    position: relative;
+    top: 8px;
+    width: 30px;
+	display: inline;
+	visibility: hidden;
+}
+
+#loading img{
+    width: 25px;
+    height: 25px;
+}
+
+#loading-pokeball-container{
+	height: 100px;
+}
+
+#loading-pokeball-container #loading-pokeball{
+	margin: 0 auto;
+    width: 90px;
+}
+
+#loading-pokeball-container #loading-pokeball img{
+    width: 90px;
+    height: 90px;
+}
+
+#map .gm-style div:nth-child(1) div:nth-child(1) div:nth-child(4) div:nth-child(1){
+	width: 22px !important; 
+	height: 40px !important;  
+}
+/*
+#map .gm-style div:nth-child(1) div:nth-child(1) div:nth-child(4) div{
+	width: 36px !important; 
+	height: 36px !important;  
+}
+*/
