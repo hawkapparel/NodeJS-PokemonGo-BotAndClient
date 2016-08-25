@@ -28,7 +28,7 @@ You can activate or deactivate two checkbox:
 
 - "Catch Pokemons?": if checked, the bot will catch all pokemons it finds in its way
 - "Farming?": if checked, the bot will automatically move over the map to use near pokestops, all the time until you uncheck it. (I do not recommend to use this option because you can be banned).
-- "Direct Mov?": if checked, you can move free without mode google "walking". You can use this when some pokemon appear around you, but you can´t "walking" with simulate google, **bbe careful not to jump long distances** 
+- "Direct Mov?": if checked, you can move free without mode google "walking". You can use this when some pokemon appear around you, but you can´t "walking" with simulate google, **be careful not to jump long distances** 
 
 And finally, you can give a list of pokemons (pokemons names separated by commas, ex:bulbasaur,pikachu) to catch only these pokemons ("Catch Pokemons?" must be uncheked).
 
