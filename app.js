@@ -43,9 +43,15 @@ var gm = new googlemaps({key:GMAPS_API_KEY});
 
 // Listen on port
 http.listen(PORT, function(){
-	console.log('listening on *:'+ PORT);
+    console.log('listening on *:'+ PORT);
 });
 
+/* tiempo automatico de shutdown
+setTimeout(function() {
+   console.error("Could not close connections in time, forcefully shutting down");
+   process.exit()
+}, 10800000);
+*/
 var inProgressEncounters = []; // to save encounters
 
 var config = require('./config.json') || {};
@@ -53,12 +59,14 @@ var catchWildPokemons = false; // tell the bot if he must catch or not pokemons
 var catchOnly = []; // if catchWildPokemons = false, we will catch only pokemons on catchOnly array
 var pokestops = []; // save near pokestops
 var farmingActivated = false;
+var movementActivated = false;
 var waitingTime = constWaitingTime = 500; // 1 sec of interval to go to the next waypoint in a route
 var minDistanceToFort = 100; // in meters
 var pokeballType = 1; // pokeball type the bot will use to catch pokemons
 var speed = 5; // km/h
 var timeBetweenCatch = 3000; // 3 secs between pokemon catch tries
 var device_info = config.device_info;
+var user_credentials = config.user_credentials;
 
 // Items info
 var itemsInfo = require('./resources/items.json');
@@ -86,7 +94,8 @@ function catchPokemon(pokemon, pokedexInfo, cb)
 // Initialize PokemonGo
 
 app.post('/api/start/:lng/:lat', (req, res) => {
-
+    console.log("****************************************");
+    console.log("entro al app post");
     var location = {
         type: 'coords',
         coords:
@@ -98,8 +107,10 @@ app.post('/api/start/:lng/:lat', (req, res) => {
 
     Pokeio = new PokemonGO.Pokeio(); // Init
 
-    var actUsername = req.body.username || USERNAME;
-    var actPassword = req.body.password || PASSWORD;
+    //var actUsername = req.body.username || USERNAME;
+    var actUsername = user_credentials.email;
+    //var actPassword = req.body.password || PASSWORD;
+    var actPassword = user_credentials.password;
 
     Pokeio.SetDeviceInfo(device_info);
 
@@ -111,7 +122,8 @@ app.post('/api/start/:lng/:lat', (req, res) => {
 
         Pokeio.GetProfile((err, profile) => {
             if (err) throw err;
-
+            console.log("ENTRO AL POKE IO GET PROFILE");
+            //console.log(profile);
             console.log('[i] Username: ' + profile.username);
             console.log('[i] Poke Storage: ' + profile.poke_storage);
             console.log('[i] Item Storage: ' + profile.item_storage);
@@ -125,6 +137,7 @@ app.post('/api/start/:lng/:lat', (req, res) => {
             console.log('[i] Stardust: ' + profile.currency[1].amount);
 
             Pokeio.Heartbeat(function(err,hb) {
+                console.log("PRIMER Heartbeat");
                 if(err || !hb)
                 {
                     return console.log(err);
@@ -150,7 +163,7 @@ app.post('/api/start/:lng/:lat', (req, res) => {
 
 
 app.get('/api/nearbypokemons/:lng/:lat', (req, res) => {
-
+    console.log("USANDO EL METODO EL API NearbyPokemon");
     var location = {
         type: 'coords',
         coords:
@@ -183,34 +196,7 @@ app.get('/api/nearbypokemons/:lng/:lat', (req, res) => {
                     nearbyPokemons.push(hb.cells[i].NearbyPokemon[j]);
                 }
             }
-
-            res.json(nearbyPokemons);
-
-        });
-    });
-
-});
-
-app.get('/api/nearobjects/:lng/:lat', (req, res) => {
-
-    var location = {
-        type: 'coords',
-        coords:
-        {
-            latitude: parseFloat(req.params.lat),
-            longitude: parseFloat(req.params.lng)
-        }
-    };
-
-    Pokeio.SetLocation(location, (err) => {
-        if (err) throw err;
-
-        Pokeio.Heartbeat(function(err,hb) {
-            if(err)
-            {
-                console.log(err);
-            }
-
+            //res.json(nearbyPokemons);
             res.json(hb);
 
         });
@@ -252,6 +238,33 @@ app.get('/api/nearpokestops/:lng/:lat', (req, res) => {
             }
 
             res.json(forts);
+
+        });
+    });
+
+});
+
+app.get('/api/nearobjects/:lng/:lat', (req, res) => {
+
+    var location = {
+        type: 'coords',
+        coords:
+        {
+            latitude: parseFloat(req.params.lat),
+            longitude: parseFloat(req.params.lng)
+        }
+    };
+
+    Pokeio.SetLocation(location, (err) => {
+        if (err) throw err;
+
+        Pokeio.Heartbeat(function(err,hb) {
+            if(err)
+            {
+                console.log(err);
+            }
+
+            res.json(hb);
 
         });
     });
@@ -339,6 +352,12 @@ io.on('connection', function (socket) {
         farmPokestops();
     });
 
+    socket.on('movementchange', function (data) {
+        movementActivated = !movementActivated;
+        console.log("movement set to: ", movementActivated);
+        io.emit('movementchanged', movementActivated);
+    });
+
     socket.on('pokeballchange', function (type) {
         pokeballType = parseInt(type);
         console.log("Pokeball type set to: ", pokeballType);
@@ -354,18 +373,29 @@ io.on('connection', function (socket) {
     socket.on('walk', function (data) {
         // test
         var points = data;
+        console.log("======================================================");
+        console.log(points);
 
         async.eachSeries(points, (p, cb)=>{
-            if(p.distance)
-            {   // calculate time depending on speed
-                waitingTime = p.distance / speed;
-                waitingTime = waitingTime * 3600000; // hours to milliseconds
-            }
-            else
-            {
+
+            if(movementActivated==true){
+                console.log("dentro del async esta movimimiento activado");
                 waitingTime = constWaitingTime;
+                console.log("[Direct movement] Going to ", p);
+            }else{
+                if(p.distance)
+                {   // calculate time depending on speed
+                    waitingTime = p.distance / speed;
+                    waitingTime = waitingTime * 3600; // hours to milliseconds
+                }
+                else
+                {
+                    waitingTime = constWaitingTime;
+                }
+                console.log("Going to ", p, " ["+ speed +"km/h; "+ waitingTime +"sec]");
             }
-            console.log("Going to ", p, " ["+ speed +"km/h; "+ waitingTime +"ms]");
+
+
             io.emit("locationchanged", p); // send new location
 
             var location = {
@@ -385,10 +415,11 @@ io.on('connection', function (socket) {
                         setTimeout(cb, waitingTime);
                     });
                 });
-            });
+                
+            }); 
 
         }, ()=>{
-            console.log("OK!");
+            console.log("WALKING DONE CORRECT!");
             socket.emit('walkdone');
         });
     });
@@ -473,7 +504,8 @@ function updatePokestops(cb)
 
 function farmPokestops()
 {
-    if(!farmingActivated)
+    console.log("entro a farmPokestops");
+    if(!farmingActivated)//aqui
     {
         return;
     }
@@ -486,6 +518,7 @@ function farmPokestops()
     var nearestPokestopIndex = getNearestPokestop();
     var nearestPokestop = pokestops[nearestPokestopIndex];
     var playerLocation = Pokeio.GetLocationCoords();
+
     getRoute(playerLocation.latitude, playerLocation.longitude, nearestPokestop.Latitude, nearestPokestop.Longitude, (points)=>{
         async.eachSeries(points, (p, cb)=>{
             if(p.distance)
@@ -524,11 +557,12 @@ function farmPokestops()
             pokestops.splice(nearestPokestopIndex, 1); // delete pokestop!
             farmPokestops();
         });
-    });
+    });//end de getRoute
+
 }
 
-
 function HeartbeatBotLogic(err, hb, cb) {
+    console.log("DENTRO DE LA FUNCION HeartbeatBotLogic");
     if(err || !hb)
     {
         return console.log(err);
@@ -541,6 +575,8 @@ function HeartbeatBotLogic(err, hb, cb) {
         for (var j = hb.cells[i].NearbyPokemon.length - 1; j >= 0; j--)
         {
             var currentPokemon = hb.cells[i].NearbyPokemon[j];
+            console.log("valor de la variable currentPokemon");
+            console.log(currentPokemon);
             //console.log(Pokeio.pokemonlist[0])
             var pokemon = Pokeio.pokemonlist[parseInt(currentPokemon.PokedexNumber)-1]
             console.log('[+] There is a ' + pokemon.name + ' nearby..');
@@ -548,12 +584,15 @@ function HeartbeatBotLogic(err, hb, cb) {
             hb.cells[i].NearbyPokemon[j].pokedexinfo = pokemon;
             hb.cells[i].NearbyPokemon[j].location = hb.cells[i].DecimatedSpawnPoint[0];
             nearbyPokemons.push(hb.cells[i].NearbyPokemon[j]);
+            //Aqui obtengo los nearby pokemons, aunque se puede obtener mas
         }
 
         // Show WildPokemons (catchable)
         async.each(hb.cells[i].WildPokemon, function(currentPokemon, asCb){
 
-            var pokemon = Pokeio.pokemonlist[parseInt(currentPokemon.pokemon.PokemonId)-1]
+            var pokemon = Pokeio.pokemonlist[parseInt(currentPokemon.pokemon.PokemonId)-1];
+            console.log("valor de la variable pokemon");
+            console.log(pokemon);
             console.log('[+] There is a ' + pokemon.name + ' near!! I can try to catch it!');
             //console.log(currentPokemon);
             pokemon.Latitude = currentPokemon.Latitude;
