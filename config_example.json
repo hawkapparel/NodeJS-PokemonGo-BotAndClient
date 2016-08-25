@@ -13,5 +13,9 @@
 		"firmware_tags":"",
 		"firmware_type":"",
 		"firmware_fingerprint":""
+	},
+	"user_credentials":{
+		"email":"Your Google Email",
+		"password":"Your password"
 	}
 }
