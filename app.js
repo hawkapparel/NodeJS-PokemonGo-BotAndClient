@@ -107,11 +107,17 @@ app.post('/api/start/:lng/:lat', (req, res) => {
 
     Pokeio = new PokemonGO.Pokeio(); // Init
 
-    //var actUsername = req.body.username || USERNAME;
-    var actUsername = user_credentials.email;
-    //var actPassword = req.body.password || PASSWORD;
-    var actPassword = user_credentials.password;
+    var actUsername = req.body.username || USERNAME;
+    var actPassword = req.body.password || PASSWORD;
 
+    if (actUsername == "" &&  actPassword == "" ){
+        console.log("entro a vacio");
+        actUsername = user_credentials.email;
+        actPassword = user_credentials.password;
+    }
+    console.log(actUsername);
+    console.log(actPassword);
+    
     Pokeio.SetDeviceInfo(device_info);
 
     Pokeio.init(actUsername, actPassword, location, PROVIDER, (err) => {

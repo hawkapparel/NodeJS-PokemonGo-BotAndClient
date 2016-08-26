@@ -111,7 +111,7 @@ function initMap() {
 
         //Set Rosa Nauticca - Miraflores (latitud, longitud) -12.130723, -77.035704
         //Set Chorrillos -12.167799, -77.036742
-        //Set La punta -12.071723, -77.168597
+        //Set La punta -12.071478, -77.163529
         //Set isla -12.081271, -77.209974
         //Set Parque Kennedy -12.118975, -77.029080
         //Set PUCP -12.069261, -77.079752
@@ -121,15 +121,15 @@ function initMap() {
         //Nido de dratinis 37.810896, -122.410700
         //-12.072800, -77.161541
         //-12.020213, -77.084801
-        /*
-        Example
-     	var lat = -12.118975;   
-		var lng = -77.029080;
-        */
-
+        //-12.073657, -77.162627
+        
+     	var lat = -12.073657;   
+		var lng = -77.162627;
+        
+/*
      	var lat = pos.coords.latitude;   
 		var lng = pos.coords.longitude;
-
+*/
 		localStorage.setItem("lng", lng);
 		localStorage.setItem("lat", lat);
 		showMap(lat, lng);

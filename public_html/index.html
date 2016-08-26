@@ -14,16 +14,27 @@
 		<div class="row">
 			<div class="col s8">
 				<div id="map"></div>
-
-				<div class="col s12">
-					<div class="col s6">
-						<input id="usernameTxt" name="usernameTxt" type="text" placeholder="Username" value="sapoeres@gmail.com"/>
-						<input id="passwordTxt" name="passwordTxt" type="password" placeholder="Password" value="secret"/>
+				<div class="col s6">
+					<div class="col s12">
+						<p>If you want login with different account in "config.json", please fill the form.</p>
+						<input id="usernameTxt" name="usernameTxt" type="text" placeholder="Username" value=""/>
+						<input id="passwordTxt" name="passwordTxt" type="password" placeholder="Password" value=""/>
 						<button class="button btn-login" onclick="login()">Log In</button>
 						<div id="loading"><img src="/img/Loading_icon.gif"></div>
 						<div id="statusLogin"></div>
 					</div>
-					<div class="col s6" style="padding-top: 15px;">
+					<div class="col s12" id="stateOfWalk">
+						<span>Status of walking:</span>
+						<div id="text-walk">
+						</div>
+					</div>
+					<div class="col s12" id="nearbyPokemons">
+						<span>Nearby Pokemons:</span>
+						<ul id="list-nearby-pokemons"></ul>
+					</div>
+				</div>
+				<div class="col s6">
+					<div class="col s12" style="padding-top: 15px;">
 						<input id="toggleCatchPokemonsCheckbox" name="toggleCatchPokemonsCheckbox" type="checkbox" value="catchpokemons" onchange="toggleCatchPokemons()" />
 		      			<label for="toggleCatchPokemonsCheckbox">Catch Pokemons?</label>
 		      			<input id="farmingChangeCheckbox" name="farmingChangeCheckbox" type="checkbox" value="farming" onchange="farmingChange()" />
@@ -31,47 +42,25 @@
 		      			<input id="movementChangeCheckbox" name="movementChangeCheckbox" type="checkbox" onchange="movementChange()" />
 		      			<label for="movementChangeCheckbox">Direct Mov?</label>
 					</div>
-				</div>
-				<div class="col s12">
-					<div class="col s6" id="stateOfWalk">
-						<span>Status of walking:</span>
-						<div id="text-walk">
-						</div>
-					</div>
-					<div class="col s6 buttons-nearby">
+					<div class="col s12 buttons-nearby">
 						<button onclick="getNearPokeStops()">Get Near PokeStops</button>
 						<button onclick="getNearbyPokemons()">Get Nearby Pokemons</button>
-					</div>				
-				</div>
-				<div class="col s12">
-					<div class="col s6" id="nearbyPokemons">
-						<span>Nearby Pokemons:</span>
-						<ul id="list-nearby-pokemons">
-							
-						</ul>
-					</div>
-					<div class="col s6">
+					</div>	
+					<div class="col s12">
 						<input id="speedTxt" name="speedTxt" type="text" placeholder="Speed. Defeult=5KM/h" value=""/>
 						<label for="speedTxt">Change bot speed (KM/h)</label>
 						<button onclick="changeSpeed()">ChangeSpeed</button>
-					</div>				
-				</div>
-
-				<!-- <button onclick="getNearObjects()">Get Near Objects</button> -->
-				<div class="col s6">
-	      			<select class="browser-default" id="pokeballTypeSelector" name="pokeballTypeSelector" onchange="pokeballChange()">
-				      <option value="" disabled selected>Select the Pokeball type that will be used to catch Pokemons</option>
-				      <option value="1">Pokeball</option>
-				      <option value="2">Greatball</option>
-				      <option value="3">Ultraball</option>
-				      <option value="4">Masterball</option>
-				    </select>
-				</div>
-				<div class="col s6">
-					<input id="catchOnlyTxt" name="catchOnlyTxt" type="text" value=""/>
-	      			<label for="catchOnlyTxt">Allowed Pokemons to catch when catch pokemons disabled</label>
-	      			<button onclick="catchOnlyChange()">Change allowed pokemons to catch</button>
-				</div>		
+					</div>
+					<div class="col s12" id="select-pokeballs">
+						<p>Select the Pokeball type that will be used to catch Pokemons:</p>
+		      			<select class="browser-default" id="pokeballTypeSelector" name="pokeballTypeSelector" onchange="pokeballChange()">
+					      <option value="1">Pokeball</option>
+					      <option value="2">Greatball</option>
+					      <option value="3">Ultraball</option>
+					      <option value="4">Masterball</option>
+					    </select>
+					</div>
+				</div>	
 			</div>
 
 			<div class="col s4">

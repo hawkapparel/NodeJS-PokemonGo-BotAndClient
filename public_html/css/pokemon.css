@@ -15,6 +15,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #statusLogin{
 	margin-left: 15px;
+	height: 20px;
 }
 
 #statusLogin span{
@@ -22,10 +23,9 @@ html, body { height: 100%; margin: 0; padding: 0; }
 }
 
 #stateOfWalk{
-	width:50%; 
+	width:100%; 
 	height:26px;
 	background-color: #949494;
-	margin: 15px 0;
 }
 
 #stateOfWalk #text-walk span{
@@ -37,7 +37,7 @@ html, body { height: 100%; margin: 0; padding: 0; }
 }
 
 #usernameTxt{
-	width: 210px;
+	width: 196px;
 }
 
 #passwordTxt{
@@ -46,6 +46,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 .buttons-nearby button{
 	height: 43px;
+}
+
+#nearbyPokemons{
+	min-height: 50px;
 }
 
 #list-nearby-pokemons li{
@@ -57,7 +61,6 @@ html, body { height: 100%; margin: 0; padding: 0; }
 
 #loading{
     position: relative;
-    top: 8px;
     width: 30px;
 	display: inline;
 	visibility: hidden;
@@ -80,6 +83,10 @@ html, body { height: 100%; margin: 0; padding: 0; }
 #loading-pokeball-container #loading-pokeball img{
     width: 90px;
     height: 90px;
+}
+
+#select-pokeballs p{
+	margin-bottom: 0;
 }
 
 #map .gm-style div:nth-child(1) div:nth-child(1) div:nth-child(4) div:nth-child(1){
