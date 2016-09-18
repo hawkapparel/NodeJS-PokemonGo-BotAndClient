@@ -37,10 +37,11 @@ function init()
 			pokemon.name,
 			pokemon.Latitude,
 			pokemon.Longitude,
-			pokemon.img
+			pokemonlistlocal.pokemon[parseInt(pokemon.id)-1].img
 		];
+		
 
-		addPokemonsMarket(obj);
+		addPokemonsMarket(dataPokemonFound);
 	});
 
 	socket.on('pokemoncatchresult', function (pokemon) {
@@ -122,9 +123,9 @@ function initMap() {
         //-12.072800, -77.161541
         //-12.020213, -77.084801
         //-12.073657, -77.162627
-        
-     	var lat = -12.073657;   
-		var lng = -77.162627;
+
+     	var lat = -12.066536;   
+		var lng = -77.156869;
         
 /*
      	var lat = pos.coords.latitude;   
@@ -157,7 +158,8 @@ function showMap(lat, lng)
 		deleteMarkers();
 		var movementchanged = $("#movementChangeCheckbox:checked").val();
 		console.log(movementchanged);
-		var sure = confirm("Do you want to go?");
+		//var sure = confirm("Do you want to go?");
+		var sure = true;
 		if(sure)
 		{
 			$("#text-walk").empty();
@@ -312,7 +314,8 @@ function listOfNearbyPokemons(res){
     };
     console.log("status del arrayMarkersPokemons");
     console.log(arrayMarkersPokemons);
-    addPokemonsMarket(arrayMarkersPokemons);
+    setMapOnAll(MAP);
+    //addPokemonsMarket(arrayMarkersPokemons);
 }
 
 function login()
@@ -336,13 +339,24 @@ function login()
 }
 
 function addPokemonsMarket(obj) {
-
+	console.log("entro a addPokemonsMarket");
 	var myLatLng = new google.maps.LatLng(obj[1], obj[2]);
+
+	var iconPokemon = {
+		url: obj[3],
+		// This marker is 36 pixels wide by 36 pixels high.
+		size: new google.maps.Size(36, 36),
+		// The origin for this image is (0, 0).
+		origin: new google.maps.Point(0, 0),
+		// The anchor for this image is the base of the flagpole at (0, 32).
+		anchor: new google.maps.Point(0, 36)
+	};
+
 	var markerPokemon = new google.maps.Marker({
 		position: myLatLng,
 		title: obj[0],
-		icon: obj[3],
-		map: MAP
+		icon: iconPokemon
+		//map: MAP
 	});
 	arrayMarkersPokemons.push(markerPokemon);
 }
@@ -361,7 +375,7 @@ function deleteMarkers() {
 
 function setMapOnAll(map) {
   for (var i = 0; i < arrayMarkersPokemons.length; i++) {
-    arrayMarkersPokemons[i].setMap(MAP);
+    arrayMarkersPokemons[i].setMap(map);
   }
 }
 

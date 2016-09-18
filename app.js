@@ -111,12 +111,9 @@ app.post('/api/start/:lng/:lat', (req, res) => {
     var actPassword = req.body.password || PASSWORD;
 
     if (actUsername == "" &&  actPassword == "" ){
-        console.log("entro a vacio");
         actUsername = user_credentials.email;
         actPassword = user_credentials.password;
     }
-    console.log(actUsername);
-    console.log(actPassword);
     
     Pokeio.SetDeviceInfo(device_info);
 
@@ -600,7 +597,8 @@ function HeartbeatBotLogic(err, hb, cb) {
             console.log("valor de la variable pokemon");
             console.log(pokemon);
             console.log('[+] There is a ' + pokemon.name + ' near!! I can try to catch it!');
-            //console.log(currentPokemon);
+            console.log("ANTES DE MOSTRAR EL CURRENT POKEMON");
+            console.log(currentPokemon);
             pokemon.Latitude = currentPokemon.Latitude;
             pokemon.Longitude = currentPokemon.Longitude;
 
